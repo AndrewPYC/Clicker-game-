@@ -1,0 +1,10 @@
+{
+  "name": "clicker-co",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node tests/game.test.mjs && node tests/server.test.mjs && node tests/auth.test.mjs && node tests/controls.test.mjs"
+  }
+}
