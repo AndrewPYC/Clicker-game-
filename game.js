@@ -52,8 +52,10 @@ function level(){return Math.floor((Math.sqrt(1+8*state.clicks/50)-1)/2)+1;}
 function threshold(l){return 25*(l-1)*l;}
 function boost(){return 1+(level()-1)*.05;}
 function baseClick(){return 1;}
-function manualClickPower(){return 1+clickUpgrades.reduce((sum,item)=>sum+(state.owned[item.id]||0)*item.clickBoost,0);}
-function baseRate(){const crewBonus=1+upgrades.reduce((sum,item)=>sum+(state.owned[item.id]||0)*item.crewBoost,0);return crew.reduce((sum,item)=>sum+(state.owned[item.id]||0)*(item.rate+(item.autoClicks||0)*baseClick()),0)*boost()*crewBonus;}
+function manualClickPower(){return baseClick()+clickUpgrades.reduce((sum,item)=>sum+(state.owned[item.id]||0)*item.clickAdd,0);}
+function productionMultiplier(){return boost()*(1+upgrades.reduce((sum,item)=>sum+(state.owned[item.id]||0)*item.crewBoost,0));}
+function manualPayout(rhythm=clickMultiplier()){return manualClickPower()*productionMultiplier()*rhythm;}
+function baseRate(){return crew.reduce((sum,item)=>sum+(state.owned[item.id]||0)*(item.rate+(item.autoClicks||0)*baseClick()),0)*productionMultiplier();}
 function earn(amount){if(Number.isFinite(amount)&&amount>0){state.balance+=amount;state.lifetime+=amount;}}
 function fmt(n){if(n<1000)return Number.isInteger(n)?String(n):n.toFixed(1);return Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:1}).format(n);}
 const priceCache=new Map();
@@ -124,8 +126,8 @@ function pet(){
   if(!gameReady)return;
   const previous=level();
   const now=performance.now();clicksPerSecond(now);clickTimes.push(now);
-  const amount=baseClick()*manualClickPower()*clickMultiplier(now);earn(amount);state.clicks++;
-  if(level()>previous){const reward=level()*50;earn(reward);toast(`Level ${level()}! +${fmt(reward)} TOCKENS and +5% crew production.`);}
+  const amount=manualPayout(clickMultiplier(now));earn(amount);state.clicks++;
+  if(level()>previous){const reward=level()*50;earn(reward);toast(`Level ${level()}! +${fmt(reward)} TOCKENS and +5% click and crew production.`);}
   playSound();render();
 }
 function buy(id){if(!gameReady)return;const item=[...upgrades,...clickUpgrades,...crew].find(x=>x.id===id);if(!item||(state.owned[id]||0)>=1000)return;const cost=price(item);if(state.balance<cost)return;state.balance-=cost;state.owned[id]=(state.owned[id]||0)+1;save();render();}
@@ -142,7 +144,7 @@ function renderShop(){
   const items=tab==='milestones'?selected.slice(milestonePage*PAGE_SIZE,(milestonePage+1)*PAGE_SIZE):tab==='crew'?crew:tab==='clicks'?clickUpgrades:upgrades;
   const claimed=new Set(state.claimed);
   $('milestoneNav').hidden=tab!=='milestones';
-  $('shopIntro').textContent=tab==='crew'?'Build your automatic Night Shift.':tab==='clicks'?'Multiply manual clicks. Your rhythm bonus stacks on top.':tab==='milestones'?(items.length?'Long-term challenges. Build an empire that lasts.':'No gifts ready yet. Keep playing, then refresh Ready gifts.'):'Small investments. Permanent crew boosts.';
+  $('shopIntro').textContent=tab==='crew'?'Build your automatic Night Shift.':tab==='clicks'?'Add TOCKENS per click. Crew boosts, levels and rhythm multiply your output.':tab==='milestones'?(items.length?'Long-term challenges. Build an empire that lasts.':'No gifts ready yet. Keep playing, then refresh Ready gifts.'):'Permanent boosts to click and Night Shift output.';
   if(tab==='milestones'){
     $('milestonePage').textContent='Page '+(milestonePage+1)+' / '+pages;
     $('previousMilestones').disabled=milestonePage===0;
@@ -179,8 +181,8 @@ function renderShop(){
 }
 function render(force=false){
   const cps=clicksPerSecond(),multiplier=multiplierFor(cps),l=level(),xp=state.clicks-threshold(l),needed=threshold(l+1)-threshold(l);
-  $('balance').textContent=fmt(state.balance);$('perClick').textContent='+'+fmt(manualClickPower()*multiplier);$('perSecond').textContent=fmt(baseRate());$('lifetime').textContent=fmt(state.lifetime);
-  $('clickPowerDetail').textContent=manualClickPower().toFixed(2)+'× click power · '+multiplier.toFixed(1)+'× rhythm';
+  $('balance').textContent=fmt(state.balance);$('perClick').textContent='+'+fmt(manualPayout(multiplier));$('perSecond').textContent=fmt(baseRate());$('lifetime').textContent=fmt(state.lifetime);
+  $('clickPowerDetail').textContent=fmt(manualClickPower())+' TOCKENS base · '+productionMultiplier().toFixed(2)+'× crew/level · '+multiplier.toFixed(1)+'× rhythm';
   $('levelPill').textContent=`LVL ${l}`;$('levelTitle').textContent=`Level ${l} · ${l<5?'Tiny dreamer':l<10?'Moonlight maker':l<20?'Midnight monarch':'Cosmic companion'}`;$('xpText').textContent=`${fmt(xp)} / ${fmt(needed)} XP`;$('xpProgress').style.width=`${xp/needed*100}%`;
   $('speedLabel').textContent=`${cps} clicks/s · ${multiplier.toFixed(1)}×`;
   $('speedProgress').style.width=`${Math.min(100,cps/25*100)}%`;

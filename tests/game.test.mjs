@@ -23,7 +23,7 @@ run('clearClickSpeed()');for(let i=0;i<25;i++){now=2000+i*20;run('pet({})');}
 assert.equal(run('clickMultiplier()'),2);
 for(const [time,cps,m] of [[3000,24,1.8],[3100,19,1.6],[3200,14,1.4],[3300,9,1.2],[3400,4,1],[3480,0,1]]){now=time;assert.equal(run('clicksPerSecond()'),cps);assert.equal(run('clickMultiplier()'),m);}
 run('state=initial();earn(1000)');run("buy('paws');buy('friend')");assert.equal(run('baseClick()'),1);close(run('baseRate()'),1.01);assert.equal(run('price(upgrades[0])'),29);
-run('state.clicks=49;clearClickSpeed()');const beforeLevel=run('state.balance');run('pet({})');assert.equal(run('level()'),2);close(run('state.balance')-beforeLevel,101);assert.equal(run('baseClick()'),1);close(run('baseRate()'),1.0605);
+run('state.clicks=49;clearClickSpeed()');const beforeLevel=run('state.balance');run('pet({})');assert.equal(run('level()'),2);close(run('state.balance')-beforeLevel,101.01);assert.equal(run('baseClick()'),1);close(run('baseRate()'),1.0605);
 run('clearClickSpeed();state.clicks=200;for(let i=0;i<30;i++)pet({})');assert.equal(run('clickMultiplier()'),2);assert.equal(run('baseClick()'),1);
 const rate=run('baseRate()'),beforeIdle=run('state.balance');wallTime+=1000;tick();close(run('state.balance')-beforeIdle,rate);
 run("claim('first')");const rewardBalance=run('state.balance');run("claim('first');claim('empire')");assert.equal(run('state.balance'),rewardBalance);
@@ -146,19 +146,38 @@ run('showGuide();window.ClickerGame.pause();window.ClickerGame.start(null,null)'
 assert.equal(getElement('gameView').hidden,false);assert.equal(getElement('guideView').hidden,true,'Every new session starts in the play view');
 console.log('15% successive prices, 1000 long-term gifts, 25-row pages, ready filter, paused sessions and unsaved guests passed.');
 run('window.ClickerGame.start(null,s=>localStorage.setItem(KEY,JSON.stringify(s)));earn(10000);buy("friend");buy("click-spark");clearClickSpeed()');
-close(run('manualClickPower()'),1.1);assert.equal(run('baseRate()'),1);
-const beforePower=run('state.balance');run('pet({})');close(run('state.balance')-beforePower,1.1);
-run('buy("click-surge");buy("click-nova");clearClickSpeed()');close(run('manualClickPower()'),1.85);
-run('for(let i=0;i<25;i++)pet({})');assert.equal(run('clickMultiplier()'),2);close(run('manualClickPower()*clickMultiplier()'),3.7);assert.equal(run('baseRate()'),1);
+close(run('manualClickPower()'),2);assert.equal(run('baseRate()'),1);
+const beforePower=run('state.balance');run('pet({})');close(run('state.balance')-beforePower,2);
+run('buy("click-surge");buy("click-nova");clearClickSpeed()');close(run('manualClickPower()'),32);
+run('for(let i=0;i<25;i++)pet({})');assert.equal(run('clickMultiplier()'),2);close(run('manualPayout()'),64);assert.equal(run('baseRate()'),1);
 run('save()');assert.equal(run('validate(JSON.parse(localStorage.getItem(KEY))).owned["click-nova"]'),1);
 assert.equal(run('validate({...initial(),owned:{}}).owned["click-spark"]'),0);
 assert.throws(()=>run('validate({...state,owned:{"click-spark":-1}})'));
 run('tab="clicks";$("empireDialog").showModal();renderShop()');assert.ok(getElement('shopItems').innerHTML.includes('click-nova'));
+assert.equal(getElement('detail-click-spark').textContent,'+1 TOCKEN per click per purchase');
+run('buy("paws");buy("paws");buy("collar");buy("treats");buy("crown");state.clicks=150;clearClickSpeed()');
+const sharedBoost=1.245*1.1;
+close(run('baseRate()'),sharedBoost);
+for(const [cps,rhythm] of [[1,1],[5,1.2],[10,1.4],[15,1.6],[20,1.8],[25,2],[30,2]]){
+  run('state.clicks=150;clickTimes=Array('+(cps-1)+').fill(performance.now())');
+  const before=run('state.balance');run('pet()');
+  close(run('state.balance')-before,32*sharedBoost*rhythm);
+  assert.equal(run('state.clicks'),151,'Flat click upgrades never add extra XP or manual clicks');
+  assert.equal(getElement('perClick').textContent,'+'+run('fmt(manualPayout())'));
+}
+now+=1000;run('render()');assert.equal(run('clickMultiplier()'),1);
+close(run('manualPayout()'),32*sharedBoost);
+const boostedIdleBalance=run('state.balance');wallTime+=1000;tick();
+close(run('state.balance')-boostedIdleBalance,sharedBoost);
+assert.equal(run('state.clicks'),151);assert.equal(run('clicksPerSecond()'),0);
+run('state=validate(JSON.parse(JSON.stringify(state)));clearClickSpeed()');
+close(run('manualClickPower()'),32);close(run('manualPayout()'),32*sharedBoost);
+run('state.owned["click-spark"]=2');close(run('manualClickPower()'),33);
 run('document.documentElement.requestFullscreen=async()=>{document.fullscreenElement=document.documentElement};document.exitFullscreen=async()=>{document.fullscreenElement=null}');
 await getElement('fullScreenButton').handlers.click();assert.equal(run('Boolean(document.fullscreenElement)'),true);assert.equal(getElement('fullScreenButton').textContent,'Exit Full Screen');
 await getElement('fullScreenButton').handlers.click();assert.equal(run('Boolean(document.fullscreenElement)'),false);assert.equal(getElement('fullScreenButton').textContent,'Full Screen');
 run('document.documentElement.requestFullscreen=async()=>{throw Error("Denied")};syncFullScreen()');await getElement('fullScreenButton').handlers.click();assert.equal(run('Boolean(document.fullscreenElement)'),false);
-console.log('Click power purchases, stacking, manual-only payouts, old/new saves, fullscreen enter/exit/failure passed.');
+console.log('Flat Click power, shared crew/level bonuses, rhythm tiers and decay, independent idle income, saves and fullscreen passed.');
 
 run('window.ClickerGame.start(null,null);state.motion=true');
 const stage=getElement('catStage'),stageChildren=stage.children.length;

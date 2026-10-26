@@ -14,17 +14,17 @@ Each click starts at **1 TOCKEN**. Count clicks over the last one second, includ
 | 20–24 | 1.8× |
 | 25+ | 2× |
 
-The multiplier falls as clicks expire. There is no interpolation, and the rhythm bonus always caps at 2×. Click power upgrades separately multiply manual payouts, which can exceed 2 TOCKENS. Crew boosts and levels affect automatic production only. Gifts are separate rewards.
+The multiplier falls as clicks expire. There is no interpolation, and the rhythm bonus always caps at 2×. Click power adds flat TOCKENS to each manual click. Crew boosts and levels multiply both manual clicks and Night Shift output. Manual payout = (1 + purchased flat click additions) × crew boost multiplier × level multiplier × rhythm, so payouts can exceed 2 TOCKENS. Gifts are separate rewards.
 
 ## Included
 - Four original flat 2D vector animals and four supplied cartoon portraits with gentle animation.
 - Four default companions (dog, cat, panda and monkey), nine rotating animal/character SVG shop skins, and purchasable Mark, Pavly, John and Emmanuel portraits. All TOCKENS share one apple shape.
-- Click power upgrades: +10%, +25%, +50% per purchase, starting at 100 / 500 / 2,500 TOCKENS. Bonuses add together, then multiply manual payouts by the rhythm bonus; they never boost automatic crew earnings. Prices rise 15% per purchase.
+- Click power upgrades: +1 / +5 / +25 TOCKENS per click per purchase, starting at 100 / 500 / 2,500 TOCKENS. Flat additions stack, then receive the same crew and level bonuses as Night Shift, plus the manual rhythm bonus. Existing purchased counts carry over. Click power never boosts automatic crew earnings. Prices rise 15% per purchase.
 - Character clicks have no apple visual effect. The companion sits on the page without a surrounding card. Opt-in Apple bite sounds use a real apple-bite recording (CC0; see assets/audio-credits.md).
 - Full Screen / Exit Full Screen in Settings, with an unavailable label on unsupported browsers.
 - Live clicks/s meter, tier highlights and fractional TOCKEN payouts.
 - Four automatic crew types: +1 TOCKEN/s sidekicks, +10 TOCKENS/s bakers, +50 automatic clicks/s couriers, +100 automatic clicks/s orchestras. Automatic clicks earn one base TOCKEN each, without affecting manual speed or XP.
-- Crew boosts: +1%, +5%, +7.5%, +10% per purchase. Start at 25 / 50 / 100 / 200 TOCKENS, with 15% price growth per purchase for every boost and crew item. Round up each successive price: 25 → 29 → 34 → 40 TOCKENS.
+- Crew boosts: +1%, +5%, +7.5%, +10% to manual click and Night Shift output per purchase. Start at 25 / 50 / 100 / 200 TOCKENS, with 15% price growth per purchase for every boost and crew item. Round up each successive price: 25 → 29 → 34 → 40 TOCKENS.
 - 1,000 long-term milestones, including the original IDs so claimed gifts remain claimed. Browse 25 per page or filter for Ready gifts. Stable claim buttons award each eligible gift with one click.
 - Mooncat brand logo, full-width companion stage, and a castle side button opening Crew boosts, Click power, Night shift and Milestones in a dismissible drawer.
 - Game-first layout with a large companion and How To Play the Game navigation. Instructions open in a dedicated view with Back to game buttons. Game dropdown: guide, milestones and night crew. Choose companion has its own top-right header button beside Settings. Settings dropdown: backups and manual save.

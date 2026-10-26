@@ -26,15 +26,15 @@ function weeklyShop(now=Date.now()){
 const OFFLINE_CAP_SECONDS=5*60*60;
 const retiredFigures = ['fox','bunny','frog','penguin'];
 const upgrades = [
-  {id:'paws',name:'Velvet paws',description:'A softer workspace for your night crew.',effect:'+1% crew output per purchase',icon:'✋',cost:25,crewBoost:.01},
-  {id:'collar',name:'Moonbeam collar',description:'Keep your crew glowing through the night.',effect:'+5% crew output per purchase',icon:'☾',cost:50,crewBoost:.05},
-  {id:'treats',name:'Midnight treats',description:'The secret ingredient is a happy cat.',effect:'+7.5% crew output per purchase',icon:'♧',cost:100,crewBoost:.075},
-  {id:'crown',name:'Crown of the cosmos',description:'For the ruler of your tiny universe.',effect:'+10% crew output per purchase',icon:'♛',cost:200,crewBoost:.1}
+  {id:'paws',name:'Velvet paws',description:'A softer workspace for your night crew.',effect:'+1% click and crew output per purchase',icon:'✋',cost:25,crewBoost:.01},
+  {id:'collar',name:'Moonbeam collar',description:'Keep your crew glowing through the night.',effect:'+5% click and crew output per purchase',icon:'☾',cost:50,crewBoost:.05},
+  {id:'treats',name:'Midnight treats',description:'The secret ingredient is a happy cat.',effect:'+7.5% click and crew output per purchase',icon:'♧',cost:100,crewBoost:.075},
+  {id:'crown',name:'Crown of the cosmos',description:'For the ruler of your tiny universe.',effect:'+10% click and crew output per purchase',icon:'♛',cost:200,crewBoost:.1}
 ];
 const clickUpgrades = [
-  {id:'click-spark',name:'Click spark',description:'A little extra power in every manual click.',effect:'+10% manual click power per purchase',icon:'✦',cost:100,clickBoost:.1},
-  {id:'click-surge',name:'Click surge',description:'Turn your rhythm into bigger apple payouts.',effect:'+25% manual click power per purchase',icon:'↟',cost:500,clickBoost:.25},
-  {id:'click-nova',name:'Click nova',description:'A powerful boost for a long-term clicker.',effect:'+50% manual click power per purchase',icon:'✧',cost:2500,clickBoost:.5}
+  {id:'click-spark',name:'Click spark',description:'A little extra power in every manual click.',effect:'+1 TOCKEN per click per purchase',icon:'✦',cost:100,clickAdd:1},
+  {id:'click-surge',name:'Click surge',description:'Turn your rhythm into bigger apple payouts.',effect:'+5 TOCKENS per click per purchase',icon:'↟',cost:500,clickAdd:5},
+  {id:'click-nova',name:'Click nova',description:'A powerful boost for a long-term clicker.',effect:'+25 TOCKENS per click per purchase',icon:'✧',cost:2500,clickAdd:25}
 ];
 const crew = [
   {id:'friend',name:'Sleepy sidekick',description:'A friend to keep the TOCKENS coming.',effect:'+1 TOCKEN per second',icon:'☕',cost:60,rate:1},
