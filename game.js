@@ -238,12 +238,12 @@ function closeMenus(){document.querySelectorAll('.header-dropdown').forEach(menu
 function openPreferences(){closeMenus();$('settingsDialog').showModal();}
 $('settingsButton').addEventListener('click',openPreferences);
 $('backupMenuButton').addEventListener('click',()=>{openPreferences();$('exportButton').focus();});
-function showGuide(){closeEmpire();closeMenus();clearClickSpeed();$('gameView').hidden=true;$('guideView').hidden=false;$('playViewButton').classList.toggle('active',false);$('howToButton').classList.toggle('active',true);$('playViewButton').removeAttribute('aria-current');$('howToButton').setAttribute('aria-current','page');$('guideTitle').focus();}
-function showGame(){closeEmpire();closeMenus();$('guideView').hidden=true;$('gameView').hidden=false;$('playViewButton').classList.toggle('active',true);$('howToButton').classList.toggle('active',false);$('howToButton').removeAttribute('aria-current');$('playViewButton').setAttribute('aria-current','page');$('catButton').focus();}
+function showGuide(){closeEmpire();closeMenus();clearClickSpeed();$('gameView').hidden=true;$('guideView').hidden=false;$('howToButton').classList.toggle('active',true);$('howToButton').setAttribute('aria-current','page');$('guideTitle').focus();}
+function showGame(){closeEmpire();closeMenus();$('guideView').hidden=true;$('gameView').hidden=false;$('howToButton').classList.toggle('active',false);$('howToButton').removeAttribute('aria-current');$('catButton').focus();}
 $('guideMenuButton').addEventListener('click',showGuide);
 $('backToGame').addEventListener('click',showGame);
 $('guideStartButton').addEventListener('click',showGame);
-$('playViewButton').addEventListener('click',showGame);
+
 function openEmpire(){closeMenus();if(!$('empireDialog').open)$('empireDialog').showModal();$('openEmpireButton').setAttribute('aria-expanded','true');renderShop();}
 function closeEmpire(){if($('empireDialog').open)$('empireDialog').close();$('openEmpireButton').setAttribute('aria-expanded','false');}
 $('openEmpireButton').addEventListener('click',openEmpire);

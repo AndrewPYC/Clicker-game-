@@ -121,3 +121,6 @@ input{font:inherit}
 /* Three permanent cosmetic skins, refreshed weekly. */
 .skin-item{align-items:center;flex-wrap:wrap}.skin-preview{width:95px;height:95px;object-fit:contain;flex-shrink:0}.skin-item h3{font-size:16px;margin:0 0 8px}.skin-item .buy-button{min-width:110px}.figure-choice:disabled{opacity:.45}.empire-drawer .tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(max-width:740px){.empire-drawer .tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 12px}.skin-preview{width:80px;height:80px}.skin-item .buy-button{flex-basis:100%}}
+
+.preferences-button{min-height:44px;padding:10px 13px;border:1px solid #393442;border-radius:8px;background:#1c1821;color:#c8d9e8;font-size:12px}.preferences-button:hover{border-color:var(--accent)}@media(max-width:740px){.header-right{flex-wrap:wrap;justify-content:flex-end}.preferences-button{max-width:155px;font-size:12px}}@media(min-width:1800px){.preferences-button{font-size:18px}}
+.cat-stage{overflow:clip}

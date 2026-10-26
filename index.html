@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#08080a"><title>CLICKER CO — Small paws. Big empire.</title><link rel="stylesheet" href="style.css?v=profiles-2"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#08080a"><title>CLICKER CO — Small paws. Big empire.</title><link rel="stylesheet" href="style.css?v=navigation-3"></head>
 <body>
 <section id="authView" class="auth-view" aria-labelledby="authTitle">
   <div class="auth-card">
@@ -27,10 +27,10 @@
   </div>
 </section>
 <div id="appShell" hidden>
-<header class="topbar"><a class="brand" href="./"><img class="brandmark" src="assets/mooncat-logo.svg" alt="Mooncat logo"> CLICKER CO<span class="tag">IDLE CLICKER</span></a><div class="header-right"><details class="header-dropdown" id="gameMenu"><summary>Game <span>⌄</span></summary><div class="dropdown-content"><button id="guideMenuButton">How To Play the Game</button><button id="itemShopButton">Weekly item shop</button><button id="milestonesMenuButton">Milestones</button><button id="crewMenuButton">Night crew</button><div class="menu-speed-note">Starts at 1 TOCKEN<br>Click power × up to 2× rhythm</div></div></details><details class="header-dropdown" id="settingsMenu"><summary>Settings <span>⌄</span></summary><div class="dropdown-content"><button id="fullScreenButton" aria-pressed="false">Full Screen</button><button id="settingsButton">Companion &amp; preferences</button><button id="backupMenuButton">Save backups</button><button id="saveNowButton">Save now</button></div></details></div></header>
+<header class="topbar"><a class="brand" href="./"><img class="brandmark" src="assets/mooncat-logo.svg" alt="Mooncat logo"> CLICKER CO<span class="tag">IDLE CLICKER</span></a><div class="header-right"><details class="header-dropdown" id="gameMenu"><summary>Game <span>⌄</span></summary><div class="dropdown-content"><button id="guideMenuButton">How To Play the Game</button><button id="itemShopButton">Weekly item shop</button><button id="milestonesMenuButton">Milestones</button><button id="crewMenuButton">Night crew</button><div class="menu-speed-note">Starts at 1 TOCKEN<br>Click power × up to 2× rhythm</div></div></details><button id="settingsButton" class="preferences-button" aria-haspopup="dialog" aria-controls="settingsDialog">Companion &amp; preferences</button><details class="header-dropdown" id="settingsMenu"><summary>Settings <span>⌄</span></summary><div class="dropdown-content"><button id="fullScreenButton" aria-pressed="false">Full Screen</button><button id="backupMenuButton">Save backups</button><button id="saveNowButton">Save now</button></div></details></div></header>
 <div class="account-bar"><div><span id="accountLabel">Guest game</span><span id="saveStatus" role="status">Guest · progress will not be saved</span></div><button id="accountButton">Leave guest</button></div>
 <div id="sessionIssue" class="session-issue" role="status" hidden><span id="sessionIssueText"></span><button id="retrySaveButton">Retry save</button></div>
-<nav class="site-tabs" aria-label="Main navigation"><button id="playViewButton" class="view-tab active" aria-current="page">Play</button><button id="howToButton" class="view-tab">How To Play the Game</button></nav>
+<nav class="site-tabs" aria-label="Main navigation"><button id="howToButton" class="view-tab">How To Play the Game</button></nav>
 <main id="gameView">
 <button id="openEmpireButton" class="empire-launcher" aria-label="Open empire: crew boosts, night shift and milestones" aria-haspopup="dialog" aria-controls="empireDialog" aria-expanded="false"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 27V12h6V6h10v6h6v15H5Zm6 0V17h10v10M8 12V8m16 4V8M14 6V2h4v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Empire</span></button>
 <section class="stats" aria-label="Your statistics"><article class="balance"><span class="stat-label">YOUR BALANCE</span><div><span class="token-icon" data-token></span><strong id="balance">0</strong><span class="unit">TOCKENS</span></div></article><article><span class="stat-label">PER CLICK</span><strong id="perClick">+1</strong><small id="clickPowerDetail">1.00× click power · 1.0× rhythm</small></article><article><span class="stat-label">PER SECOND</span><strong id="perSecond">0</strong><small>Your crew, working the night shift</small></article><article><span class="stat-label">LIFETIME EARNED</span><strong id="lifetime">0</strong><small>Click earnings, crew income & gifts</small></article></section>
@@ -54,5 +54,5 @@
 </div><button id="guideStartButton" class="back-button primary">Back to game →</button>
 </section>
 </div>
-<div class="toast-container" id="toasts" aria-live="polite"></div><script src="model.js?v=profiles-2"></script><script src="controls.js?v=profiles-2"></script><script src="game.js?v=profiles-2"></script><script src="auth.js?v=profiles-2"></script>
+<div class="toast-container" id="toasts" aria-live="polite"></div><script src="model.js?v=navigation-3"></script><script src="controls.js?v=navigation-3"></script><script src="game.js?v=navigation-3"></script><script src="auth.js?v=navigation-3"></script>
 </body></html>
