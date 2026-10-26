@@ -193,7 +193,7 @@ function applyFigure(){
   if(!canUseFigure(state.figure))state.figure='luna';
   const f=figures.find(f=>f.id===state.figure);$('heroCat').src=f.src;$('heroCat').alt=f.alt;$('figureName').textContent=f.title;$('catButton').ariaLabel=`Click ${f.name} to earn TOCKENS`;
   document.body.classList.toggle('reduce-motion',state.motion);$('soundToggle').checked=state.sound;$('motionToggle').checked=state.motion;
-  $('figureChoices').innerHTML=figures.filter(f=>!f.shop||skinAccess.ownedSkins.includes(f.id)).map(f=>`<button class="figure-choice ${state.figure===f.id?'selected':''}" data-figure="${f.id}" aria-pressed="${state.figure===f.id}" ${canUseFigure(f.id)?'':'disabled'}><img src="${f.src}" alt="">${f.name}${canUseFigure(f.id)?'':' · Invite only'}</button>`).join('');
+  $('figureChoices').innerHTML=figures.filter(f=>canUseFigure(f.id)).map(f=>`<button class="figure-choice ${state.figure===f.id?'selected':''}" data-figure="${f.id}" aria-pressed="${state.figure===f.id}"><img src="${f.src}" alt="">${f.name}</button>`).join('');
 }
 $('catButton').addEventListener('click',pet);
 function changeMilestones(action){

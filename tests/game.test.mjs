@@ -192,10 +192,13 @@ assert.ok(biteWav.length>10000);assert.equal(biteWav.readUInt16LE(22),1);
 console.log('Character clicks without apple effects, recorded bite playback, opt-in sound and bounded audio overlap passed.');
 
 run('window.ClickerGame.start(null,null)');
+for(const id of ['mark','emmanuel','pavly','john'])assert.ok(!getElement('figureChoices').innerHTML.includes(`data-figure="${id}"`),'Uninvited users do not see restricted portraits');
 getElement('figureChoices').handlers.click({target:{closest:()=>({dataset:{figure:'mark'}})}});
 assert.equal(run('state.figure'),'luna','Guests cannot select invitation-only portraits');
 run('state.figure="emmanuel";applyFigure()');assert.equal(run('state.figure'),'luna');
 run('window.ClickerGame.start(null,null,{allowedFigures:["emmanuel"]})');
+assert.ok(getElement('figureChoices').innerHTML.includes('data-figure="emmanuel"'));
+for(const id of ['mark','pavly','john'])assert.ok(!getElement('figureChoices').innerHTML.includes(`data-figure="${id}"`),'Only granted portraits are visible');
 getElement('figureChoices').handlers.click({target:{closest:()=>({dataset:{figure:'emmanuel'}})}});
 assert.equal(run('state.figure'),'emmanuel');
 const monday=Date.UTC(2026,9,26);
