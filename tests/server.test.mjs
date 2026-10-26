@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { createGameServer } from '../server.mjs';
+import { createGameServer, runtimeConfig } from '../server.mjs';
 
 const dataDir=await mkdtemp(path.join(os.tmpdir(),'clicker-auth-test-'));
 const accessFile=path.join(dataDir,'access.json');
@@ -21,15 +21,25 @@ async function request(route,{method='GET',body,cookie,csrf,origin=base}={}){
   return {status:response.status,data:type.includes('json')?await response.json():await response.text(),cookie:response.headers.get('set-cookie')?.split(';')[0],headers:response.headers};
 }
 const password='Aa1!bcde';
+assert.equal(runtimeConfig({PORT:'10000',NODE_ENV:'production',RENDER_EXTERNAL_URL:'https://clicker.example/'}).host,'0.0.0.0');
+assert.equal(runtimeConfig({NODE_ENV:'production',APP_ORIGIN:'https://clicker.example/'}).origin,'https://clicker.example');
+assert.throws(()=>runtimeConfig({NODE_ENV:'production'}));
+assert.throws(()=>runtimeConfig({NODE_ENV:'production',APP_ORIGIN:'http://clicker.example'}));
 try{
   await start();
   assert.equal((await request('/')).status,200);
   assert.equal((await request('/controls.js')).status,200);
   const bite=await request('/assets/apple-bite.wav');assert.equal(bite.status,200);assert.equal(bite.headers.get('content-type'),'audio/wav');
   assert.equal((await request('/api/session')).status,401);
+  const health=await request('/api/health');assert.equal(health.status,200);assert.equal(health.data.service,'clicker-co');assert.equal(health.data.accounts,true);
   assert.equal((await request('/api/register',{method:'POST',body:{username:'Alice',password},origin:'https://other.example'})).status,403);
-  for(const invalid of ['abcdefgh','ABCDEFG!','Abcdefgh','Ab1! cdE','Aa1!bcd','Aa1!bcdef']){
+  for(const invalid of ['abcdefgh','ABCDEFG!','Abcdefgh','Ab1! cdE','Aa1!bcd','Aa!'+ 'x'.repeat(126)]){
     assert.equal((await request('/api/register',{method:'POST',body:{username:'Invalid_'+invalid.length,password:invalid}})).status,400);
+  }
+  for(const longPassword of ['Aa1!bcdef','AppleBite!2026','Aa!'+ 'x'.repeat(125)]){
+    const username='Long_'+longPassword.length;
+    assert.equal((await request('/api/register',{method:'POST',body:{username,password:longPassword}})).status,200);
+    assert.equal((await request('/api/login',{method:'POST',body:{username,password:longPassword}})).status,200,'Long passwords can sign in without truncation');
   }
   const simultaneous=await Promise.all(['Alice','aLiCe'].map(username=>request('/api/register',{method:'POST',body:{username,password}})));
   assert.deepEqual(simultaneous.map(r=>r.status).sort(),[200,409],'Concurrent registrations cannot duplicate a username');

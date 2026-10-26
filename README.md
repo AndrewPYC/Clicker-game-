@@ -1,6 +1,6 @@
 # CLICKER CO
 
-A black-and-purple companion clicker. The welcome screen offers **Play as guest**, **Create user**, or **Sign in**. Guest games never save. Accounts keep separate progress on the game server.
+A black-and-purple companion clicker. The welcome screen offers **Enter your name**, **Continue**, or **Play as guest**. Named profiles save progress and purchased skins in localStorage on this browser and device. No password, cookies or account server is required. Guest games never save.
 
 ## Exact speed bonuses
 Each click starts at **1 TOCKEN**. Count clicks over the last one second, including the current click:
@@ -28,7 +28,7 @@ The multiplier falls as clicks expire. There is no interpolation, and the rhythm
 - 1,000 long-term milestones, including the original IDs so claimed gifts remain claimed. Browse 25 per page or filter for Ready gifts. Stable claim buttons award each eligible gift with one click.
 - Mooncat brand logo, full-width companion stage, and a castle side button opening Crew boosts, Click power, Night shift and Milestones in a dismissible drawer.
 - Game-first layout with a large companion and compact Play / How To Play the Game tabs. Instructions open in a dedicated view with Back to game buttons. Game dropdown: guide, milestones and night crew. Settings dropdown: companions/preferences, backups and manual save.
-- Account autosave, five-hour offline earnings cap, validated JSON import/export and reset confirmation.
+- Local profile autosave, five-hour offline earnings cap, validated JSON import/export and reset confirmation.
 - Phone/tablet portrait and landscape layouts, large touch targets, safe-area spacing, large-screen layouts and keyboard/TV remote focus navigation. Optional sound and reduced motion.
 
 ## Run locally
@@ -39,17 +39,15 @@ Use Node.js 20 or newer. No package install or build step is required.
 npm start
 ```
 
-Open **http://localhost:8000**. Keep the server running while playing. Opening index.html directly, or using a static-only web server, supports guest play; account actions explain that the account server is required.
+Open **http://localhost:8000**, or use any static web server including GitHub Pages. No backend deployment is needed for local profiles. Opening index.html directly may also work, but browser storage behavior for file URLs varies; use a hosted URL for reliable saves.
 
-Usernames are unique without regard to letter case, and use 3–24 letters, numbers, underscores or hyphens. Passwords must be exactly 8 characters with no whitespace, an uppercase letter, a lowercase letter and a special character. Passwords are stored as salted scrypt hashes, never plaintext. Sessions use HTTP-only, SameSite cookies and expire after seven days; restarting the server requires signing in again but preserves saved games.
+Names use 1-24 letters, numbers, spaces, underscores or hyphens. Names are case-insensitive within this browser, not globally unique or password protected. Anyone using this browser can resume a named profile. Other browsers/devices have independent saves. Clearing site data or ending private browsing can erase progress. Export a backup in Settings regularly.
 
-The private `data/` directory stores accounts and saves. It is excluded from Git and cannot be fetched from the web server. Back it up privately. Run only one server process against each data directory. There is no password reset flow yet. Progress is client-authoritative, as in the original game; this is not an anti-cheat service.
-
-Save requests are queued and use revisions. If another device saves newer progress, the older game pauses and asks you to export a backup and sign in again instead of overwriting it. A connection failure displays an unsaved message and retries. Use Settings to export a backup, import one, or explicitly bring over an older clicker-co-save-v2 / mooncat-save-v1 browser save. Older saves and claimed milestone IDs remain compatible. Guests cannot import or export saves.
+Each profile keeps gameplay, settings, milestone claims and purchased skins. Offline crew earnings remain capped at five hours. Use Settings to import/export gameplay backups or explicitly bring over an older browser save. Gameplay exports do not transfer shop ownership; ownership stays with the local profile. Guest games do not persist or export. Older server accounts are not automatically migrated. The legacy Node account API remains in server.mjs but is unused by the current interface.
 
 ## Phones, tablets and TVs
 
-Use the same hosted game URL on each device to access the same accounts. Touch the companion on phones/iPads; use Space or Enter on keyboards. Arrow keys move focus and OK/Select activates the focused control for TV browsers. Escape/Back closes dialogs. Modern browsers are required. Actual iPhone, iPad, Android and smart-TV hardware has not been tested in this workspace.
+Open the hosted game URL on each device; local profiles remain separate on each browser/device. Touch the companion on phones/iPads; use Space or Enter on keyboards. Arrow keys move focus and OK/Select activates the focused control for TV browsers. Escape/Back closes dialogs. Modern browsers are required. Actual iPhone, iPad, Android and smart-TV hardware has not been tested in this workspace.
 
 For a home-network preview, set the origin to this computer's LAN address (replace the example), then open that URL on another device on the same network:
 
@@ -61,7 +59,7 @@ npm start
 
 ## Public hosting
 
-Accounts require hosting **server.mjs**, not just index.html. Configure a persistent private `DATA_DIR` and a single Node process behind an HTTPS reverse proxy. Set `NODE_ENV=production`, `APP_ORIGIN=https://your-game.example` (no path), and `PORT` / `HOST` for that host. Production cookies use Secure and the server sends HSTS. Do not publish the data directory, password hashes or environment files. This change does not deploy or create a public URL.
+Publish the HTML, CSS, JavaScript and assets to GitHub Pages or another static host. Local profiles work without server APIs. Never publish the private data/ directory or environment files. This local change has not been published yet.
 
 ## Development
 
@@ -71,8 +69,8 @@ Read AGENT.md (also linked from AGENTS.md). Run `npm test` for game logic, real 
 The main reference is [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/), especially its idle economy, upgrades, milestones and save controls. Fixed rhythm tiers and friendship chapters are original implementations. All four animals are original SVG illustrations with solid colors and matching outlines. Mark, Pavly, John and Emmanuel are separate portraits prepared from user-supplied images, with checkerboard backgrounds removed. The apple TOCKEN is a shared red SVG illustration. All artwork loads locally.
 
 ## Weekly item shop and invite-only portraits
-The Item shop in Empire (also in the Game menu) shows exactly three cosmetic skins, priced at 1,500 / 2,000 / 2,500 TOCKENS. Offers change each Monday at **00:00 UTC** through a nine-skin catalog: fox, rabbit, frog, penguin, koala, red panda, otter, Mario and Spider-Man. Sign in to purchase; owned skins stay available in Settings permanently, including after the shop rotates or game progress is reset. Skins do not affect payouts.
+The Item shop in Empire (also in the Game menu) shows exactly three cosmetic skins, priced at 1,500 / 2,000 / 2,500 TOCKENS. Offers change each Monday at **00:00 UTC** through a nine-skin catalog: fox, rabbit, frog, penguin, koala, red panda, otter, Mario and Spider-Man. Enter your name to purchase; owned skins stay available in Settings permanently, including after the shop rotates or game progress is reset. Skins do not affect payouts.
 
-Mark, Emmanuel, Pavly and John are now locked unless the account is explicitly granted access. Existing unauthorized portrait selections fall back to Luna; balances and other progress remain intact. The private server configuration `skin-access.json` starts empty. When recipients are named, add their usernames as keys and allowed IDs as arrays (IDs: `mark`, `emmanuel`, `pavly`, `john`). Usernames are matched without regard to case. No character-name-based grants are automatic. Re-sign in to load updated access; no server restart is needed for grant-file edits. Imports and client-supplied ownership fields cannot unlock restricted skins.
+Mark, Emmanuel, Pavly and John stay invite-only and locked for all local profiles. A matching name never grants access. Browser-only profiles cannot securely establish an invited identity; no invite grants are inferred or enabled by this change. The legacy server grant file remains private and unused by local profiles.
 
 Previously purchased recolored skins remain selectable and valid in saves, but are retired from new weekly offers. New shop animals use shop-prefixed IDs so legacy retired animal selections still migrate correctly. Mario and Spider-Man are new flat SVG character illustrations; the shop still has exactly three offers and all cosmetics use the existing prices and purchase rules.

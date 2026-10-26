@@ -10,19 +10,14 @@
     <p class="auth-intro">Pick a companion, collect TOCKENS and grow your night crew.</p>
     <div id="authChoices" class="auth-choices">
       <button id="continueAccountButton" class="auth-primary" hidden>Continue your game</button>
-      <button id="createUserButton" class="auth-primary">Create user <span>Keep your progress across devices</span></button>
-      <button id="signInButton" class="auth-secondary">Sign in <span>Return to your saved empire</span></button>
+      <button id="createUserButton" class="auth-primary">Enter your name <span>Save progress on this device</span></button>
       <button id="guestButton" class="auth-secondary">Play as guest <span>No saves · a fresh game each visit</span></button>
     </div>
     <form id="authForm" hidden>
-      <label for="username">Username</label>
-      <input id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" minlength="3" maxlength="24" required aria-describedby="usernameHelp">
-      <p id="usernameHelp" class="field-help">3–24 letters, numbers, underscores or hyphens. Usernames are unique, including uppercase/lowercase variations.</p>
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" autocomplete="current-password" required aria-describedby="passwordHelp">
-      <p id="passwordHelp" class="field-help">Exactly 8 characters. No spaces. Include an uppercase letter, a lowercase letter and a special character, such as ! or @.</p>
-      <div id="confirmPasswordRow" hidden><label for="confirmPassword">Confirm password</label><input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password"></div>
-      <button id="authSubmit" type="submit" class="auth-primary">Sign in &amp; play</button>
+      <label for="username">Your name</label>
+      <input id="username" name="username" autocomplete="nickname" spellcheck="false" minlength="1" maxlength="24" required aria-describedby="usernameHelp">
+      <p id="usernameHelp" class="field-help">Use 1-24 letters, numbers, spaces, underscores or hyphens. Enter the same name to resume on this browser. No password needed.</p>
+      <button id="authSubmit" type="submit" class="auth-primary">Play &amp; save on this device</button>
       <button id="authBack" type="button" class="auth-secondary">Back to choices</button>
     </form>
     <p id="authError" class="auth-error" role="alert" aria-live="polite"></p>
@@ -33,7 +28,7 @@
 <div id="appShell" hidden>
 <header class="topbar"><a class="brand" href="./"><img class="brandmark" src="assets/mooncat-logo.svg" alt="Mooncat logo"> CLICKER CO<span class="tag">IDLE CLICKER</span></a><div class="header-right"><details class="header-dropdown" id="gameMenu"><summary>Game <span>⌄</span></summary><div class="dropdown-content"><button id="guideMenuButton">How To Play the Game</button><button id="itemShopButton">Weekly item shop</button><button id="milestonesMenuButton">Milestones</button><button id="crewMenuButton">Night crew</button><div class="menu-speed-note">Starts at 1 TOCKEN<br>Click power × up to 2× rhythm</div></div></details><details class="header-dropdown" id="settingsMenu"><summary>Settings <span>⌄</span></summary><div class="dropdown-content"><button id="fullScreenButton" aria-pressed="false">Full Screen</button><button id="settingsButton">Companion &amp; preferences</button><button id="backupMenuButton">Save backups</button><button id="saveNowButton">Save now</button></div></details></div></header>
 <div class="account-bar"><div><span id="accountLabel">Guest game</span><span id="saveStatus" role="status">Guest · progress will not be saved</span></div><button id="accountButton">Leave guest</button></div>
-<div id="sessionIssue" class="session-issue" role="status" hidden><span id="sessionIssueText"></span><button id="retrySaveButton">Retry save / return to sign in</button></div>
+<div id="sessionIssue" class="session-issue" role="status" hidden><span id="sessionIssueText"></span><button id="retrySaveButton">Retry save</button></div>
 <nav class="site-tabs" aria-label="Main navigation"><button id="playViewButton" class="view-tab active" aria-current="page">Play</button><button id="howToButton" class="view-tab">How To Play the Game</button></nav>
 <main id="gameView">
 <button id="openEmpireButton" class="empire-launcher" aria-label="Open empire: crew boosts, night shift and milestones" aria-haspopup="dialog" aria-controls="empireDialog" aria-expanded="false"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 27V12h6V6h10v6h6v15H5Zm6 0V17h10v10M8 12V8m16 4V8M14 6V2h4v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Empire</span></button>
@@ -54,7 +49,7 @@
 <article class="panel guide-card"><span>03</span><h2>Open your empire</h2><p>Press the castle icon on the side of the game to open Crew boosts, Night shift and Milestones. Close the panel with × or Escape to return to your companion.</p><p>Sidekicks earn 1 TOCKEN/s and bakers earn 10. Couriers make 50 automatic clicks/s; orchestras make 100. Each automatic click earns one base TOCKEN. Crew boosts and level bonuses improve this automatic output.</p><p>Automatic clicks never increase your manual click-speed multiplier, XP, or head-pat count. Every item’s price grows by 15% after each purchase of that item, rounded up.</p></article>
 <article class="panel guide-card"><span>04</span><h2>Upgrade your crew</h2><p>Each Velvet Paws purchase adds 1% output; Moonbeam Collar adds 5%; Midnight Treats adds 7.5%; Crown of the Cosmos adds 10%.</p><p>Starting prices: <b>25 / 50 / 100 / 200</b> TOCKENS. Each boost’s price increases by 15% per purchase, rounded up. Crew boosts add together and only affect crew earnings.</p><p>The separate <b>Click power</b> tab offers Click spark (+10%), Click surge (+25%), and Click nova (+50%) per purchase, starting at 100 / 500 / 2,500 TOCKENS. These add together, then multiply manual payouts by your rhythm bonus. Automatic crew clicks keep their 1-TOCKEN base.</p></article>
 <article class="panel guide-card"><span>05</span><h2>Take the long way up</h2><p>Manual head pats level up your friendship. Each level gives a separate TOCKEN gift and +5% crew production. Work toward 1,000 increasingly demanding milestones, reaching 10 million head pats, level 500 and one quadrillion lifetime TOCKENS. Browse 25 at a time or choose Ready gifts to find rewards you can claim.</p><p>When a milestone is ready, click <b>Claim gift</b> once. Each milestone can be claimed only once.</p></article>
-<article class="panel guide-card"><span>06</span><h2>Make it yours. Keep it safe.</h2><p>Choose a dog, cat, panda or monkey in Settings. The weekly item shop offers three cosmetic skins for TOCKENS and refreshes Mondays at 00:00 UTC. Purchased skins stay in Settings permanently. Mark, Pavly, John and Emmanuel require account access granted by the game owner. TOCKENS always stay red apples. Sound and reduced motion are optional. Choose Full Screen in Settings when your browser supports it.</p><p>Sign in to save progress to your account and continue on another device at this same website. Your crew earns for up to 5 hours away. Guests start fresh and do not save progress. Signed-in players can export a backup or bring over an older browser save in Settings.</p></article>
+<article class="panel guide-card"><span>06</span><h2>Make it yours. Keep it safe.</h2><p>Choose a dog, cat, panda or monkey in Settings. The weekly item shop offers three cosmetic skins for TOCKENS and refreshes Mondays at 00:00 UTC. Purchased skins stay in Settings permanently. Mark, Pavly, John and Emmanuel remain invite-only and locked in local profiles. TOCKENS always stay red apples. Sound and reduced motion are optional. Choose Full Screen in Settings when your browser supports it.</p><p>Enter your name to save progress and purchased skins in this browser on this device. Return with the same name to continue. No password or server is required. Clearing site data removes local saves; use Export save for a backup. Your crew earns for up to 5 hours away. Guests start fresh and do not save progress. You can import a progress backup on another device; skin ownership stays with the local profile.</p></article>
 </div><button id="guideStartButton" class="back-button primary">Back to game →</button>
 </section>
 </div>

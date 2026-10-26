@@ -9,9 +9,24 @@ import './model.js';
 const derive = promisify(scrypt);
 const root = path.dirname(fileURLToPath(import.meta.url));
 const { validate, initial, figures, restrictedFigures, skins, allShopSkins, weeklyShop } = globalThis.ClickerModel;
-const passwordValid = value => typeof value === 'string' && [...value].length === 8 && !/\s/u.test(value) && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[^A-Za-z0-9\s]/u.test(value);
+const passwordValid = value => typeof value === 'string' && [...value].length >= 8 && !/\s/u.test(value) && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[^A-Za-z0-9\s]/u.test(value);
 const usernameValid = value => typeof value === 'string' && /^[A-Za-z0-9_-]{3,24}$/.test(value);
 const fail = (status, message) => Object.assign(new Error(message), { status });
+
+export function runtimeConfig(env={}){
+  const secure=env.NODE_ENV==='production';
+  const configured=env.APP_ORIGIN||env.RENDER_EXTERNAL_URL||'';
+  let origin='';
+  if(configured){
+    const url=new URL(configured);
+    if(!['http:','https:'].includes(url.protocol)||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw Error('APP_ORIGIN must be the game URL without a path, credentials or query.');
+    origin=url.origin;
+  }
+  if(secure&&(!origin||!origin.startsWith('https://')))throw Error('Production accounts require an HTTPS APP_ORIGIN (or RENDER_EXTERNAL_URL).');
+  const port=Number(env.PORT||8000);
+  if(!Number.isInteger(port)||port<1||port>65535)throw Error('PORT must be a valid port number.');
+  return {port,host:env.HOST||(env.PORT?'0.0.0.0':'127.0.0.1'),origin,secure,dataDir:env.DATA_DIR||path.join(root,'data')};
+}
 
 // One server process owns the data directory. Account creation is exclusive;
 // save writes are serialized per user and replaced atomically on the same disk.
@@ -90,6 +105,7 @@ export async function createGameServer({ dataDir = path.join(root, 'data'), orig
         if (req.method !== 'GET') {
           if (req.headers.origin !== expectedOrigin || !String(req.headers['content-type']).startsWith('application/json')) throw fail(403, 'Request must come from this game.');
         }
+        if(url.pathname==='/api/health'&&req.method==='GET')return json(200,{service:'clicker-co',accounts:true});
         if(url.pathname==='/api/shop'&&req.method==='GET')return json(200,weeklyShop(clock()));
         if (['/api/register', '/api/login'].includes(url.pathname) && req.method === 'POST') {
           limited('ip:' + req.socket.remoteAddress, 120);
@@ -97,10 +113,10 @@ export async function createGameServer({ dataDir = path.join(root, 'data'), orig
           if (!usernameValid(input?.username)) throw fail(400, 'Use a username of 3–24 letters, numbers, underscores or hyphens.');
           const key = input.username.toLowerCase();
           limited('user:' + key, 15);
-          if (typeof input.password !== 'string' || input.password.length > 128) throw fail(400, 'Enter your password.');
+          if (typeof input.password !== 'string' || input.password.length > 128) throw fail(400, 'Enter a password of at most 128 characters.');
           let account;
           if (url.pathname === '/api/register') {
-            if (!passwordValid(input.password)) throw fail(400, 'Use exactly 8 characters, no spaces, with an uppercase letter, a lowercase letter and a special character.');
+            if (!passwordValid(input.password)) throw fail(400, 'Use at least 8 characters, no spaces, with an uppercase letter, a lowercase letter and a special character.');
             const salt = randomBytes(16).toString('hex');
             const hash = (await derive(input.password, salt, 64)).toString('hex');
             account = { username: input.username, salt, hash, save: null, revision: 0 };
@@ -178,7 +194,7 @@ export async function createGameServer({ dataDir = path.join(root, 'data'), orig
 }
 
 if (typeof process !== 'undefined' && process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  const port = Number(process.env.PORT || 8000), host = process.env.HOST || '127.0.0.1';
-  const server = await createGameServer({ dataDir: process.env.DATA_DIR || path.join(root, 'data'), origin: process.env.APP_ORIGIN || '', secure: process.env.NODE_ENV === 'production' });
+  const {port,host,...config}=runtimeConfig(process.env);
+  const server = await createGameServer(config);
   server.listen(port, host, () => console.log(`CLICKER CO: http://${host}:${port}`));
 }

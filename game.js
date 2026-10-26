@@ -36,7 +36,7 @@ function renderSkinShop(){
   for(const skin of shop.offers){
     const owned=skinAccess.ownedSkins.includes(skin.id),button=$('skin-buy-'+skin.id);
     $('skin-state-'+skin.id).textContent=owned?'Owned · keep forever':fmt(skin.cost)+' TOCKENS';
-    button.textContent=owned?(state.figure===skin.id?'Equipped':'Equip'):skinAccess.onSkinBuy?'Buy '+fmt(skin.cost):'Sign in to buy';
+    button.textContent=owned?(state.figure===skin.id?'Equipped':'Equip'):skinAccess.onSkinBuy?'Buy '+fmt(skin.cost):'Enter name to buy';
     button.disabled=owned?state.figure===skin.id:!skinAccess.onSkinBuy||state.balance<skin.cost;
   }
 }
@@ -260,7 +260,7 @@ document.addEventListener('click',event=>{if(!event.target.closest('.header-drop
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){const openMenu=document.querySelector('.header-dropdown[open]');if(openMenu){closeMenus();openMenu.querySelector('summary').focus();}}});$('howToButton').addEventListener('click',showGuide);
 $('figureChoices').addEventListener('click',e=>{const b=e.target.closest('[data-figure]');if(!b||!canUseFigure(b.dataset.figure))return;state.figure=b.dataset.figure;applyFigure();save();});
 $('soundToggle').addEventListener('change',e=>{state.sound=e.target.checked;playSound();save();});$('motionToggle').addEventListener('change',e=>{state.motion=e.target.checked;applyFigure();save();});
-$('exportButton').addEventListener('click',()=>{if(!saveHandler){toast('Guest progress cannot be saved. Create an account to keep a game.');return;}save();const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='clicker-co-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Save exported. Keep it somewhere cozy.');});
+$('exportButton').addEventListener('click',()=>{if(!saveHandler){toast('Guest progress cannot be saved. Enter your name to keep a game.');return;}save();const url=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='clicker-co-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Save exported. Keep it somewhere cozy.');});
 $('importButton').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>100000)throw Error('This file is too large.');const next=validate(JSON.parse(await file.text()));if(!confirm('Replace your current progress with this save?'))return;state=next;clearClickSpeed();previous=Date.now();applyFigure();save();render(true);toast('Your cozy empire is back.');}catch(error){toast('Could not import: '+error.message);}finally{e.target.value='';}});
 $('resetButton').addEventListener('click',()=>{if(!confirm('Reset ALL progress? Export a backup first if you want to keep this game.'))return;state=initial();clearClickSpeed();previous=Date.now();applyFigure();save();render(true);toast('A fresh little start.');});
 let previous=Date.now();setInterval(()=>{const now=Date.now();if(!gameReady){previous=now;return;}const elapsed=Math.min(OFFLINE_CAP_SECONDS,Math.max(0,(now-previous)/1000));earn(baseRate()*elapsed);previous=now;render();},100);setInterval(save,5000);window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.hidden){clearClickSpeed();save();}});
