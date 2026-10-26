@@ -102,18 +102,12 @@ input{font:inherit}
 @media(max-width:740px){.empire-drawer .tabs{gap:6px}.empire-drawer .tab{font-size:11px}}
 @media(min-width:1800px){.empire-drawer .tab{font-size:16px}}
 
-/* One small apple for every manual click; reduced motion keeps a brief static apple. */
-.click-apple{position:absolute;width:22px;height:22px;object-fit:contain;pointer-events:none;user-select:none;z-index:5;transform:translate(-50%,-50%);animation:appleFade 1.3s ease-out forwards;filter:drop-shadow(0 2px 3px #0008)}
-@keyframes appleFade{0%,35%{opacity:1}100%{opacity:0}}
-
 /* The companion sits directly on the page, without a surrounding card. */
 .play-panel{border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
 
-/* Leave room around the entire companion for apples that never touch it. */
+/* Keep the companion centered with room around it. */
 .cat-stage{--companion-size:min(60vh,560px,calc(90vw - 100px));min-height:calc(var(--companion-size) + 96px)}
 .cat-button{width:var(--companion-size);height:var(--companion-size)}
-.reduce-motion .click-apple{animation:appleFade 1.3s ease-out forwards!important}
-@media(prefers-reduced-motion:reduce){.click-apple{animation:appleFade 1.3s ease-out forwards!important}}
 
 /* Remaining night-crew tip fills the row after removing the quest card. */
 .bottom-grid{grid-template-columns:1fr}

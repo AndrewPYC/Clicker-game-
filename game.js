@@ -120,37 +120,12 @@ function playSound(){
     if(!biteLoadFailed){biteLoadFailed=true;toast('Sound is unavailable in this browser.');}
   }
 }
-function showClickApple(){
-  const stage=$('catStage'),rect=stage.getBoundingClientRect(),character=$('catButton').getBoundingClientRect();
-  const left=character.left-rect.left,top=character.top-rect.top,right=left+character.width,bottom=top+character.height;
-  const inset=14,gap=22,band=10;
-  // Sample only free space outside the character's full rectangle, including a gap.
-  const regions=[
-    [Math.max(inset,left-gap-band),Math.max(inset,top),Math.min(rect.width-inset,left-gap),Math.min(rect.height-inset,bottom)],
-    [Math.max(inset,right+gap),Math.max(inset,top),Math.min(rect.width-inset,right+gap+band),Math.min(rect.height-inset,bottom)],
-    [Math.max(inset,left-gap),Math.max(inset,top-gap-band),Math.min(rect.width-inset,right+gap),Math.min(rect.height-inset,top-gap)],
-    [Math.max(inset,left-gap),Math.max(inset,bottom+gap),Math.min(rect.width-inset,right+gap),Math.min(rect.height-inset,bottom+gap+band)]
-  ].filter(([x1,y1,x2,y2])=>x2>x1&&y2>y1);
-  const area=regions.reduce((sum,[x1,y1,x2,y2])=>sum+(x2-x1)*(y2-y1),0);
-  let pick=Math.random()*area,region=regions[regions.length-1];
-  for(const candidate of regions){pick-=(candidate[2]-candidate[0])*(candidate[3]-candidate[1]);if(pick<=0){region=candidate;break;}}
-  const x=region?region[0]+Math.random()*(region[2]-region[0]):right+gap;
-  const y=region?region[1]+Math.random()*(region[3]-region[1]):top+character.height/2;
-  const apple=document.createElement('img');
-  apple.className='click-apple';apple.src='assets/apple-token.svg';apple.alt='';apple.draggable=false;apple.setAttribute('aria-hidden','true');
-  apple.style.left=x+'px';
-  apple.style.top=y+'px';
-  stage.append(apple);
-  setTimeout(()=>apple.remove(),1300);
-}
-
-function pet(event){
+function pet(){
   if(!gameReady)return;
   const previous=level();
   const now=performance.now();clicksPerSecond(now);clickTimes.push(now);
   const amount=baseClick()*manualClickPower()*clickMultiplier(now);earn(amount);state.clicks++;
   if(level()>previous){const reward=level()*50;earn(reward);toast(`Level ${level()}! +${fmt(reward)} TOCKENS and +5% crew production.`);}
-  showClickApple();
   playSound();render();
 }
 function buy(id){if(!gameReady)return;const item=[...upgrades,...clickUpgrades,...crew].find(x=>x.id===id);if(!item||(state.owned[id]||0)>=1000)return;const cost=price(item);if(state.balance<cost)return;state.balance-=cost;state.owned[id]=(state.owned[id]||0)+1;save();render();}

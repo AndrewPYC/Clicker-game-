@@ -17,10 +17,10 @@ Each click starts at **1 TOCKEN**. Count clicks over the last one second, includ
 The multiplier falls as clicks expire. There is no interpolation, and the rhythm bonus always caps at 2×. Click power upgrades separately multiply manual payouts, which can exceed 2 TOCKENS. Crew boosts and levels affect automatic production only. Gifts are separate rewards.
 
 ## Included
-- Four original flat 2D vector animals and four supplied cartoon portraits with gentle animation and a small apple effect on every click.
+- Four original flat 2D vector animals and four supplied cartoon portraits with gentle animation.
 - Four default companions (dog, cat, panda and monkey), nine rotating animal/character SVG shop skins, and invite-only Mark, Pavly, John and Emmanuel portraits. All TOCKENS share one apple shape.
 - Click power upgrades: +10%, +25%, +50% per purchase, starting at 100 / 500 / 2,500 TOCKENS. Bonuses add together, then multiply manual payouts by the rhythm bonus; they never boost automatic crew earnings. Prices rise 15% per purchase.
-- One small apple per manual click at a random position outside the character with a gap, including keyboard taps. The companion sits on the page without a surrounding card. Apples stay visible briefly and fade out over 1.3 seconds, in a narrow band close to the character without touching it. Opt-in Apple bite sounds use a real apple-bite recording (CC0; see assets/audio-credits.md), replacing the synthesized effect.
+- Character clicks have no apple visual effect. The companion sits on the page without a surrounding card. Opt-in Apple bite sounds use a real apple-bite recording (CC0; see assets/audio-credits.md).
 - Full Screen / Exit Full Screen in Settings, with an unavailable label on unsupported browsers.
 - Live clicks/s meter, tier highlights and fractional TOCKEN payouts.
 - Four automatic crew types: +1 TOCKEN/s sidekicks, +10 TOCKENS/s bakers, +50 automatic clicks/s couriers, +100 automatic clicks/s orchestras. Automatic clicks earn one base TOCKEN each, without affecting manual speed or XP.

@@ -161,22 +161,15 @@ run('document.documentElement.requestFullscreen=async()=>{throw Error("Denied")}
 console.log('Click power purchases, stacking, manual-only payouts, old/new saves, fullscreen enter/exit/failure passed.');
 
 run('window.ClickerGame.start(null,null);state.motion=true');
-const stage=getElement('catStage'),priorApples=stage.children.filter(child=>child.className==='click-apple').length;
-run('const originalRandom=Math.random;let randomStep=0;Math.random=()=>[0,.5,.25,.75][randomStep++%4];pet({clientX:50,clientY:60});pet({});Math.random=originalRandom');
-const apples=stage.children.filter(child=>child.className==='click-apple');
-assert.equal(apples.length-priorApples,2,'Every manual click creates exactly one apple, including reduced motion');
-assert.equal(apples.at(-2).src,'assets/apple-token.svg');
-assert.notEqual(apples.at(-2).style.left,'50px','Apple position is independent of pointer coordinates');
-assert.notEqual(apples.at(-1).style.left+apples.at(-1).style.top,apples.at(-2).style.left+apples.at(-2).style.top,'Each click samples a fresh random position');
-for(const apple of apples.slice(-2)){
-  assert.ok(parseFloat(apple.style.left)>=14&&parseFloat(apple.style.left)<=386);
-  assert.ok(parseFloat(apple.style.top)>=14&&parseFloat(apple.style.top)<=386);
-  const x=parseFloat(apple.style.left),y=parseFloat(apple.style.top);
-  assert.ok(x<=58||x>=342||y<=58||y>=342,'The entire apple stays clear of the character with a gap');
-  assert.ok(Math.max(80-x,x-320,80-y,y-320)<=32,'Apples remain close to the character');
-}
-assert.equal(scheduled.at(-1).delay,1300);scheduled.at(-1).fn();assert.equal(apples.at(-1).removed,true);
-run('state.motion=false;pet({})');assert.equal(scheduled.at(-1).delay,1300);
+const stage=getElement('catStage'),stageChildren=stage.children.length;
+getElement('catButton').handlers.click({clientX:50,clientY:60});
+getElement('catButton').handlers.click({});
+assert.equal(stage.children.length,stageChildren,'Character clicks do not create apple effects with reduced motion');
+run('state.motion=false');
+getElement('catButton').handlers.click({});
+assert.equal(stage.children.length,stageChildren,'Character clicks do not create apple effects with motion enabled');
+assert.equal(run('state.clicks'),3);
+assert.equal(run('state.balance'),3,'Clicks still award TOCKENS');
 run('state.sound=false;playSound()');assert.equal(run('bitePlayers.length'),0);
 run(`
   const audioTest={players:[]};
@@ -196,7 +189,7 @@ run('state.sound=true;playSound()');assert.equal(run('bitePlayers.length'),6,'Fi
 const biteWav=await fs.readFile(new URL('../assets/apple-bite.wav',import.meta.url));
 assert.equal(biteWav.toString('ascii',0,4),'RIFF');assert.equal(biteWav.toString('ascii',8,12),'WAVE');
 assert.ok(biteWav.length>10000);assert.equal(biteWav.readUInt16LE(22),1);
-console.log('Nearby non-overlapping apples, 1.3-second lifetime, cleanup, recorded bite playback, opt-in sound and bounded audio overlap passed.');
+console.log('Character clicks without apple effects, recorded bite playback, opt-in sound and bounded audio overlap passed.');
 
 run('window.ClickerGame.start(null,null)');
 getElement('figureChoices').handlers.click({target:{closest:()=>({dataset:{figure:'mark'}})}});
