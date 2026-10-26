@@ -27,7 +27,7 @@ The multiplier falls as clicks expire. There is no interpolation, and the rhythm
 - Crew boosts: +1%, +5%, +7.5%, +10% per purchase. Start at 25 / 50 / 100 / 200 TOCKENS, with 15% price growth per purchase for every boost and crew item. Round up each successive price: 25 → 29 → 34 → 40 TOCKENS.
 - 1,000 long-term milestones, including the original IDs so claimed gifts remain claimed. Browse 25 per page or filter for Ready gifts. Stable claim buttons award each eligible gift with one click.
 - Mooncat brand logo, full-width companion stage, and a castle side button opening Crew boosts, Click power, Night shift and Milestones in a dismissible drawer.
-- Game-first layout with a large companion and How To Play the Game navigation. Instructions open in a dedicated view with Back to game buttons. Game dropdown: guide, milestones and night crew. Companion & preferences has its own header button beside Settings. Settings dropdown: backups and manual save.
+- Game-first layout with a large companion and How To Play the Game navigation. Instructions open in a dedicated view with Back to game buttons. Game dropdown: guide, milestones and night crew. Choose companion has its own top-right header button beside Settings. Settings dropdown: backups and manual save.
 - Local profile autosave, five-hour offline earnings cap, validated JSON import/export and reset confirmation.
 - Phone/tablet portrait and landscape layouts, large touch targets, safe-area spacing, large-screen layouts and keyboard/TV remote focus navigation. Optional sound and reduced motion.
 
