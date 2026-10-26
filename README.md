@@ -1,6 +1,6 @@
 # CLICKER CO
 
-A black-and-purple companion clicker. The welcome screen offers **Enter your name**, **Continue**, or **Play as guest**. Named profiles save progress and purchased skins in localStorage on this browser and device. No password, cookies or account server is required. Guest games never save.
+A black-and-purple companion clicker. The welcome screen offers **Create player**, **Returning player**, **Continue**, or **Play as guest**. Named profiles save progress and purchased skins in localStorage on this browser and device. No password, cookies or account server is required. Guest games never save.
 
 ## Exact speed bonuses
 Each click starts at **1 TOCKEN**. Count clicks over the last one second, including the current click:

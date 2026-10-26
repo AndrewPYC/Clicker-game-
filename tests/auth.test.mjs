@@ -1,4 +1,4 @@
-﻿import assert from 'node:assert/strict';
+import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
 const source=await fs.readFile(new URL('../auth.js',import.meta.url),'utf8');
@@ -10,7 +10,7 @@ function harness(storage=new Map()){
   vm.runInContext(modelSource,context);const model=context.ClickerModel;current=model.initial();
   context.window={ClickerGame:{validate:model.validate,snapshot:()=>JSON.parse(JSON.stringify(current)),pause(){pauses++;},openShop(){},start(raw,onSave,options){current=raw||model.initial();starts.push({raw,onSave,options});}}};
   vm.runInContext(source,context);
-  return {get,starts,storage,model,click:id=>get(id).handlers.click(),enter(name){get('username').value=name;get('authForm').handlers.submit({preventDefault(){}});},set fail(v){fail=v;},get current(){return current;},get pauses(){return pauses;}};
+  return {get,starts,storage,model,click:id=>get(id).handlers.click(),enter(name,action=storage.has('clicker-co-profile-v1:'+name.toLowerCase())?'resume':'create'){get(action==='create'?'createUserButton':'signInButton').handlers.click();get('username').value=name;get('authForm').handlers.submit({preventDefault(){}});},set fail(v){fail=v;},get current(){return current;},get pauses(){return pauses;}};
 }
 const first=harness();first.enter('Andrew');
 assert.equal(first.get('appShell').hidden,false);assert.equal(first.starts.length,1);

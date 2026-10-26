@@ -2,7 +2,7 @@
 (function(){
   const el=id=>document.getElementById(id),game=window.ClickerGame,model=globalThis.ClickerModel;
   const prefix='clicker-co-profile-v1:',lastKey='clicker-co-last-profile-v1';
-  let profile=null,stored=null,key=null,blocked=false;
+  let profile=null,stored=null,key=null,blocked=false,mode='create';
   const status=text=>{el('saveStatus').textContent=text;};
   function issue(text){el('sessionIssue').hidden=false;el('sessionIssueText').textContent=text;}
   function read(name){
@@ -36,11 +36,14 @@
     el('sessionIssue').hidden=true;el('catButton').focus();
     if(data)persist(game.snapshot());
   }
-  function enter(name){
+  function enter(name,action='resume'){
     name=name.trim();
     if(!/^[\p{L}\p{N} _-]{1,24}$/u.test(name))throw Error('Use 1–24 letters, numbers, spaces, underscores or hyphens for your name.');
     key=prefix+name.toLowerCase();
-    const found=read(name);stored=found?.text||null;
+    const found=read(name);
+    if(action==='create'&&found)throw Error('That player already exists on this device. Choose Returning player to continue.');
+    if(action==='resume'&&!found)throw Error('No saved player with that name on this browser. Choose Create player to start a new game.');
+    stored=found?.text||null;
     const data=found?.data||{version:1,name,ownedSkins:[],save:model.initial()};
     blocked=false;
     if(!write(data))throw Error('Cannot save in this browser. Enable site storage or play as a guest.');
@@ -60,12 +63,18 @@
     try{const name=localStorage.getItem(lastKey);el('continueAccountButton').hidden=!name;if(name)el('continueAccountButton').textContent='Continue as '+name;}catch{el('continueAccountButton').hidden=true;}
   }
   el('guestButton').addEventListener('click',()=>openGame(null));
-  el('createUserButton').addEventListener('click',()=>{
-    el('authChoices').hidden=true;el('authForm').hidden=false;el('authTitle').textContent='What is your name?';el('username').focus();
-  });
+  function showForm(next){
+    mode=next;el('authChoices').hidden=true;el('authForm').hidden=false;el('authError').textContent='';
+    el('authTitle').textContent=mode==='create'?'Create your player':'Welcome back';
+    el('authSubmit').textContent=mode==='create'?'Create player & play':'Resume game';
+    el('usernameHelp').textContent=mode==='create'?'Choose a new name (1-24 letters, numbers, spaces, underscores or hyphens). Saves stay on this browser. No password needed.':'Enter your existing player name to resume the save on this browser. No password needed.';
+    el('username').value='';el('username').focus();
+  }
+  el('createUserButton').addEventListener('click',()=>showForm('create'));
+  el('signInButton').addEventListener('click',()=>showForm('resume'));
   el('authBack').addEventListener('click',choices);
   el('authForm').addEventListener('submit',event=>{
-    event.preventDefault();el('authError').textContent='';try{enter(el('username').value);}catch(error){el('authError').textContent=error.message;}
+    event.preventDefault();el('authError').textContent='';try{enter(el('username').value,mode);}catch(error){el('authError').textContent=error.message;}
   });
   el('continueAccountButton').addEventListener('click',()=>{try{enter(localStorage.getItem(lastKey)||'');}catch(error){el('authError').textContent=error.message;}});
   el('accountButton').addEventListener('click',()=>{
