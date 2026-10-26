@@ -63,7 +63,7 @@ try{
   const bobRaw={...raw,balance:50000,lifetime:50000};
   const bobSave=await request('/api/save',{method:'POST',cookie:bob.cookie,csrf:bob.data.csrf,body:{save:bobRaw,revision:0,allowedFigures:['emmanuel']}});
   assert.equal(bobSave.data.figure,'luna','Forged grants and imported portraits cannot unlock restricted skins');
-  const shop=await request('/api/shop');assert.equal(shop.data.offers.length,7);
+  const shop=await request('/api/shop');assert.equal(shop.data.offers.length,4);
   const offer=shop.data.offers[0];
   const buy=await request('/api/shop/buy',{method:'POST',cookie:bob.cookie,csrf:bob.data.csrf,body:{id:offer.id,revision:1}});
   assert.equal(buy.status,200);assert.equal(buy.data.save.balance,50000-offer.cost);assert.equal(buy.data.save.figure,offer.id);assert.ok(buy.data.ownedSkins.includes(offer.id));
@@ -73,7 +73,7 @@ try{
   const forged=await request('/api/save',{method:'POST',cookie:bob.cookie,csrf:bob.data.csrf,body:{save:{...bobRaw,figure:lockedSkin.id,skins:[lockedSkin.id]},revision:2}});
   assert.equal(forged.data.figure,'luna');
   shopNow+=7*86400000;
-  assert.equal((await request('/api/shop')).data.offers.length,7);
+  assert.equal((await request('/api/shop')).data.offers.length,3);
   assert.equal((await request('/api/shop/buy',{method:'POST',cookie:bob.cookie,csrf:bob.data.csrf,body:{id:offer.id,revision:3}})).status,400,'Expired offers cannot be purchased');
   assert.ok((await request('/api/session',{cookie:bob.cookie})).data.ownedSkins.includes(offer.id),'Purchased skins remain owned after rotation');
   assert.equal((await request('/skin-access.json')).status,404);

@@ -18,10 +18,12 @@ const legacySkins=[{"id":"cat-starlight","name":"Starlight Luna","title":"Starli
 const skins=[{"id":"shop-fox","name":"Ember the fox","title":"Ember the fox","src":"assets/shop-fox.svg","alt":"Ember the fox, a flat 2D cartoon skin","species":"fox","cost":1500,"shop":true},{"id":"shop-rabbit","name":"Clover the rabbit","title":"Clover the rabbit","src":"assets/shop-rabbit.svg","alt":"Clover the rabbit, a flat 2D cartoon skin","species":"rabbit","cost":2000,"shop":true},{"id":"shop-frog","name":"Puddle the frog","title":"Puddle the frog","src":"assets/shop-frog.svg","alt":"Puddle the frog, a flat 2D cartoon skin","species":"frog","cost":2500,"shop":true},{"id":"shop-penguin","name":"Pip the penguin","title":"Pip the penguin","src":"assets/shop-penguin.svg","alt":"Pip the penguin, a flat 2D cartoon skin","species":"penguin","cost":1500,"shop":true},{"id":"shop-koala","name":"Kiki the koala","title":"Kiki the koala","src":"assets/shop-koala.svg","alt":"Kiki the koala, a flat 2D cartoon skin","species":"koala","cost":2000,"shop":true},{"id":"shop-red-panda","name":"Maple the red panda","title":"Maple the red panda","src":"assets/shop-red-panda.svg","alt":"Maple the red panda, a flat 2D cartoon skin","species":"red panda","cost":2500,"shop":true},{"id":"shop-otter","name":"Ripple the otter","title":"Ripple the otter","src":"assets/shop-otter.svg","alt":"Ripple the otter, a flat 2D cartoon skin","species":"otter","cost":1500,"shop":true},{"id":"shop-mario","name":"Mario","title":"Mario","src":"assets/shop-mario.svg","alt":"Mario, a flat 2D cartoon skin","species":"character","cost":2000,"shop":true},{"id":"shop-spiderman","name":"Spider-Man","title":"Spider-Man","src":"assets/shop-spiderman.svg","alt":"Spider-Man, a flat 2D cartoon skin","species":"character","cost":2500,"shop":true}];
 const allShopSkins=[...legacySkins,...skins,...portraitSkins];
 figures.push(...legacySkins,...skins);
-const WEEK_MS=7*24*60*60*1000,SHOP_EPOCH=Date.UTC(2026,0,5);
+const WEEK_MS=7*24*60*60*1000,SHOP_EPOCH=Date.UTC(2026,9,26);
+// Portraits headline this week, then return once per four-week cycle.
+const shopGroups=[portraitSkins,skins.slice(0,3),skins.slice(3,6),skins.slice(6,9)];
 function weeklyShop(now=Date.now()){
-  const week=Math.floor((now-SHOP_EPOCH)/WEEK_MS),group=((week%3)+3)%3;
-  return {week,serverTime:now,refreshAt:SHOP_EPOCH+(week+1)*WEEK_MS,offers:[...skins.slice(group*3,group*3+3),...portraitSkins]};
+  const week=Math.floor((now-SHOP_EPOCH)/WEEK_MS),group=((week%shopGroups.length)+shopGroups.length)%shopGroups.length;
+  return {week,serverTime:now,refreshAt:SHOP_EPOCH+(week+1)*WEEK_MS,offers:[...shopGroups[group]]};
 }
 const OFFLINE_CAP_SECONDS=5*60*60;
 const retiredFigures = ['fox','bunny','frog','penguin'];

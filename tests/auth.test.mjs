@@ -3,10 +3,10 @@ import fs from 'node:fs/promises';
 import vm from 'node:vm';
 const source=await fs.readFile(new URL('../auth.js',import.meta.url),'utf8');
 const modelSource=await fs.readFile(new URL('../model.js',import.meta.url),'utf8');
-function harness(storage=new Map()){
+function harness(storage=new Map(),now=Date.UTC(2026,9,26)){
   const nodes=new Map(),starts=[];let current,fail=false,pauses=0;
   const get=id=>{if(!nodes.has(id))nodes.set(id,{value:'',hidden:false,textContent:'',handlers:{},focus(){},addEventListener(t,h){this.handlers[t]=h;}});return nodes.get(id);};
-  const context=vm.createContext({Date,console,document:{getElementById:get},confirm:()=>true,localStorage:{getItem:k=>storage.get(k)??null,setItem(k,v){if(fail)throw Error('Storage full');storage.set(k,v);}}});
+  const context=vm.createContext({Date:class extends Date{static now(){return now;}},console,document:{getElementById:get},confirm:()=>true,localStorage:{getItem:k=>storage.get(k)??null,setItem(k,v){if(fail)throw Error('Storage full');storage.set(k,v);}}});
   vm.runInContext(modelSource,context);const model=context.ClickerModel;current=model.initial();
   context.window={ClickerGame:{validate:model.validate,snapshot:()=>JSON.parse(JSON.stringify(current)),pause(){pauses++;},openShop(){},start(raw,onSave,options){current=raw||model.initial();starts.push({raw,onSave,options});}}};
   vm.runInContext(source,context);
@@ -22,7 +22,7 @@ assert.equal(returning.starts.length,0,'Welcome stays visible until Continue');
 assert.equal(returning.get('continueAccountButton').hidden,false);
 returning.click('continueAccountButton');assert.equal(returning.current.clicks,21);
 assert.equal(returning.current.balance,10000);
-const offer=returning.model.weeklyShop(Date.now()).offers[0];
+const offer=returning.model.weeklyShop(Date.UTC(2026,9,26)).offers[0];
 returning.starts.at(-1).options.onSkinBuy(offer.id);
 assert.equal(returning.current.balance,10000-offer.cost);
 assert.ok(returning.starts.at(-1).options.ownedSkins.includes(offer.id));
@@ -51,14 +51,19 @@ const portraits=harness();portraits.enter('Portrait Buyer');
 portraits.current.balance=10000;portraits.current.lifetime=10000;
 portraits.starts.at(-1).onSave(portraits.current);
 for(const id of ['mark','pavly','john','emmanuel']){
-  assert.ok(portraits.model.weeklyShop(Date.now()).offers.some(s=>s.id===id&&s.cost===2500));
+  assert.ok(portraits.model.weeklyShop(Date.UTC(2026,9,26)).offers.some(s=>s.id===id&&s.cost===2500));
   portraits.starts.at(-1).options.onSkinBuy(id);
   assert.equal(portraits.current.figure,id);
   assert.ok(portraits.starts.at(-1).options.ownedSkins.includes(id));
 }
 assert.equal(portraits.current.balance,0);
-const portraitReturn=harness(portraits.storage);portraitReturn.enter('Portrait Buyer');
+const portraitReturn=harness(portraits.storage,Date.UTC(2026,10,2));portraitReturn.enter('Portrait Buyer');
 for(const id of ['mark','pavly','john','emmanuel'])assert.ok(portraitReturn.starts.at(-1).options.ownedSkins.includes(id));
+const expired=harness(new Map(),Date.UTC(2026,10,2));expired.enter('Late Buyer');
+expired.current.balance=10000;expired.current.lifetime=10000;expired.starts.at(-1).onSave(expired.current);
+for(const id of ['mark','pavly','john','emmanuel'])expired.starts.at(-1).options.onSkinBuy(id);
+assert.equal(expired.current.balance,10000,'Expired portrait offers cannot spend TOCKENS');
+assert.equal(expired.starts.at(-1).options.ownedSkins.length,0,'Expired portraits cannot be purchased');
 const poor=harness();poor.enter('No Funds');poor.starts.at(-1).options.onSkinBuy('mark');
 assert.equal(poor.starts.at(-1).options.ownedSkins.length,0);
-console.log('Local profile and permanent portrait purchase tests passed.');
+console.log('Local profile and weekly portrait purchase tests passed.');

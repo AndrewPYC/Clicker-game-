@@ -221,16 +221,28 @@ for(const id of ['mark','pavly','john'])assert.ok(!getElement('figureChoices').i
 getElement('figureChoices').handlers.click({target:{closest:()=>({dataset:{figure:'emmanuel'}})}});
 assert.equal(run('state.figure'),'emmanuel');
 const monday=Date.UTC(2026,9,26);
-for(const time of [monday-1,monday,monday+7*86400000])assert.equal(run('weeklyShop('+time+').offers.length'),7);
+const portraitIds=['mark','pavly','john','emmanuel'];
+assert.deepEqual(Array.from(run('weeklyShop('+monday+').offers.map(s=>s.id)')),portraitIds);
+assert.equal(run('weeklyShop('+(monday-1)+').offers.length'),3);
+for(let week=1;week<=3;week++){
+  const offers=Array.from(run('weeklyShop('+(monday+week*7*86400000)+').offers.map(s=>s.id)'));
+  assert.equal(offers.length,3);
+  assert.ok(offers.every(id=>!portraitIds.includes(id)),'Portraits rotate out of the shop');
+}
+assert.deepEqual(Array.from(run('weeklyShop('+(monday+4*7*86400000)+').offers.map(s=>s.id)')),portraitIds);
 assert.notEqual(run('weeklyShop('+(monday-1)+').offers[0].id'),run('weeklyShop('+monday+').offers[0].id'));
 assert.equal(run('weeklyShop('+monday+').refreshAt'),monday+7*86400000);
-run('window.ClickerGame.start(null,null);tab="shop";$("empireDialog").showModal();renderShop()');
-assert.equal((getElement('shopItems').innerHTML.match(/class="shop-item skin-item"/g)||[]).length,7);
+run('window.ClickerGame.start(null,null);updateShopClock({serverTime:'+monday+'});tab="shop";$("empireDialog").showModal();renderShop()');
+assert.equal((getElement('shopItems').innerHTML.match(/class="shop-item skin-item"/g)||[]).length,4);
 const shopWrites=writes;run('renderShop()');assert.equal(writes,shopWrites,'Shop buttons remain stable on live updates');
+run('window.ClickerGame.start(null,null,{ownedSkins:["emmanuel"]});updateShopClock({serverTime:'+(monday+7*86400000)+'});tab="shop";renderShop()');
+assert.equal((getElement('shopItems').innerHTML.match(/class="shop-item skin-item"/g)||[]).length,3);
+assert.ok(!getElement('shopItems').innerHTML.includes('data-skin="emmanuel"'));
+assert.ok(getElement('figureChoices').innerHTML.includes('data-figure="emmanuel"'),'Owned portraits stay selectable outside their offer week');
 assert.equal(run('OFFLINE_CAP_SECONDS'),18000);
 run('window.ClickerGame.start({...initial(),lastSaved:Date.now()-48*3600000,owned:{friend:1}},null)');
 assert.equal(run('offlineGift'),18000,'Offline crew earnings stop at five hours');
-console.log('Weekly three-skin rotation, stable offers, purchased portraits and five-hour offline cap passed.');
+console.log('Four-week skin rotation, stable offers, purchased portraits and five-hour offline cap passed.');
 
 assert.equal(run('skins.length'),9);
 assert.equal(run('new Set(skins.filter(s=>s.species!=="character").map(s=>s.species)).size'),7);
