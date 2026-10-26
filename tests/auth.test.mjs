@@ -47,4 +47,18 @@ assert.equal(failedBuy.current.balance,10000,'Failed writes do not spend TOCKENS
 assert.equal(failedBuy.starts.at(-1).options.ownedSkins.length,0);
 const invalid=harness();invalid.enter('<script>');assert.equal(invalid.starts.length,0);
 const corrupt=harness(new Map([['clicker-co-profile-v1:bad','broken']]));corrupt.enter('Bad');assert.equal(corrupt.starts.length,0);
-console.log('Local profile tests passed.');
+const portraits=harness();portraits.enter('Portrait Buyer');
+portraits.current.balance=10000;portraits.current.lifetime=10000;
+portraits.starts.at(-1).onSave(portraits.current);
+for(const id of ['mark','pavly','john','emmanuel']){
+  assert.ok(portraits.model.weeklyShop(Date.now()).offers.some(s=>s.id===id&&s.cost===2500));
+  portraits.starts.at(-1).options.onSkinBuy(id);
+  assert.equal(portraits.current.figure,id);
+  assert.ok(portraits.starts.at(-1).options.ownedSkins.includes(id));
+}
+assert.equal(portraits.current.balance,0);
+const portraitReturn=harness(portraits.storage);portraitReturn.enter('Portrait Buyer');
+for(const id of ['mark','pavly','john','emmanuel'])assert.ok(portraitReturn.starts.at(-1).options.ownedSkins.includes(id));
+const poor=harness();poor.enter('No Funds');poor.starts.at(-1).options.onSkinBuy('mark');
+assert.equal(poor.starts.at(-1).options.ownedSkins.length,0);
+console.log('Local profile and permanent portrait purchase tests passed.');

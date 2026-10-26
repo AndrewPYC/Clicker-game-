@@ -28,7 +28,7 @@ function updateShopClock(shop){if(Number.isFinite(shop?.serverTime))shopClockOff
 function renderSkinShop(){
   const shop=weeklyShop(Date.now()+shopClockOffset),key='shop-'+shop.week;
   $('milestoneNav').hidden=true;
-  $('shopIntro').textContent='Three skins · refreshes '+new Date(shop.refreshAt).toISOString().slice(0,10)+' at 00:00 UTC · cosmetic only';
+  $('shopIntro').textContent='Three rotating skins + four permanent portraits · rotation refreshes '+new Date(shop.refreshAt).toISOString().slice(0,10)+' at 00:00 UTC · cosmetic only';
   if(renderedTab!==key){
     $('shopItems').innerHTML=shop.offers.map(s=>'<article class="shop-item skin-item"><img class="skin-preview" src="'+s.src+'" alt="'+s.alt+'"><div class="item-body"><h3>'+s.name+'</h3><p>Permanent cosmetic skin</p><small id="skin-state-'+s.id+'"></small></div><button class="buy-button" id="skin-buy-'+s.id+'" data-skin="'+s.id+'"></button></article>').join('');
     renderedTab=key;

@@ -18,7 +18,7 @@ The multiplier falls as clicks expire. There is no interpolation, and the rhythm
 
 ## Included
 - Four original flat 2D vector animals and four supplied cartoon portraits with gentle animation.
-- Four default companions (dog, cat, panda and monkey), nine rotating animal/character SVG shop skins, and invite-only Mark, Pavly, John and Emmanuel portraits. All TOCKENS share one apple shape.
+- Four default companions (dog, cat, panda and monkey), nine rotating animal/character SVG shop skins, and purchasable Mark, Pavly, John and Emmanuel portraits. All TOCKENS share one apple shape.
 - Click power upgrades: +10%, +25%, +50% per purchase, starting at 100 / 500 / 2,500 TOCKENS. Bonuses add together, then multiply manual payouts by the rhythm bonus; they never boost automatic crew earnings. Prices rise 15% per purchase.
 - Character clicks have no apple visual effect. The companion sits on the page without a surrounding card. Opt-in Apple bite sounds use a real apple-bite recording (CC0; see assets/audio-credits.md).
 - Full Screen / Exit Full Screen in Settings, with an unavailable label on unsupported browsers.
@@ -68,9 +68,9 @@ Read AGENT.md (also linked from AGENTS.md). Run `npm test` for game logic, real 
 ## Inspiration and art
 The main reference is [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/), especially its idle economy, upgrades, milestones and save controls. Fixed rhythm tiers and friendship chapters are original implementations. All four animals are original SVG illustrations with solid colors and matching outlines. Mark, Pavly, John and Emmanuel are separate portraits prepared from user-supplied images, with checkerboard backgrounds removed. The apple TOCKEN is a shared red SVG illustration. All artwork loads locally.
 
-## Weekly item shop and invite-only portraits
-The Item shop in Empire (also in the Game menu) shows exactly three cosmetic skins, priced at 1,500 / 2,000 / 2,500 TOCKENS. Offers change each Monday at **00:00 UTC** through a nine-skin catalog: fox, rabbit, frog, penguin, koala, red panda, otter, Mario and Spider-Man. Enter your name to purchase; owned skins stay available in Settings permanently, including after the shop rotates or game progress is reset. Skins do not affect payouts.
+## Item shop and portraits
+The Item shop in Empire (also in the Game menu) shows three rotating cosmetic skins, priced at 1,500 / 2,000 / 2,500 TOCKENS, plus four permanent portraits at 2,500 TOCKENS each. Offers change each Monday at **00:00 UTC** through a nine-skin catalog: fox, rabbit, frog, penguin, koala, red panda, otter, Mario and Spider-Man. Enter your name to purchase; owned skins stay available in Settings permanently, including after the shop rotates or game progress is reset. Skins do not affect payouts.
 
-Mark, Emmanuel, Pavly and John stay invite-only and locked for all local profiles. A matching name never grants access. Browser-only profiles cannot securely establish an invited identity; no invite grants are inferred or enabled by this change. The legacy server grant file remains private and unused by local profiles.
+Mark, Pavly, John and Emmanuel are regular shop skins. Each must be purchased for 2,500 TOCKENS before selection. All four stay available every week. Purchases use the same local profile storage and ownership rules as other skins; names and imported saves never grant ownership.
 
-Previously purchased recolored skins remain selectable and valid in saves, but are retired from new weekly offers. New shop animals use shop-prefixed IDs so legacy retired animal selections still migrate correctly. Mario and Spider-Man are new flat SVG character illustrations; the shop still has exactly three offers and all cosmetics use the existing prices and purchase rules.
+Previously purchased recolored skins remain selectable and valid in saves, but are retired from new weekly offers. New shop animals use shop-prefixed IDs so legacy retired animal selections still migrate correctly. Mario and Spider-Man are new flat SVG character illustrations; the shop has three rotating offers plus four permanent portraits and all cosmetics use the existing prices and purchase rules.
